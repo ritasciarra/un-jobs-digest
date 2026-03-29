@@ -1,0 +1,33 @@
+name: UN Jobs Weekly Digest
+
+on:
+  schedule:
+    # Every Friday at 8:00 AM UTC (adjust to your timezone below)
+    # UTC 8:00 = Central America (El Salvador) 2:00 AM  →  change to 14:00 UTC for 8 AM local
+    - cron: "0 14 * * 5"   # Friday 14:00 UTC = 08:00 AM El Salvador time
+
+  # Allow manual trigger from the GitHub Actions tab (useful for testing)
+  workflow_dispatch:
+
+jobs:
+  send-digest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scraper and send email
+        env:
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+          SENDER_EMAIL:    ${{ secrets.SENDER_EMAIL }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+        run: python scraper.py
