@@ -259,7 +259,8 @@ def send_email(jobs: list[dict]) -> None:
     msg.attach(MIMEText(build_html_email(jobs),  "html"))
 
     log.info("Sending email to %s …", RECIPIENT_EMAIL)
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+    with smtplib.SMTP("smtp.mail.yahoo.com", 587) as server:
+        server.starttls()
         server.login(SENDER_EMAIL, SENDER_PASSWORD)
         server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())
     log.info("Email sent successfully.")
